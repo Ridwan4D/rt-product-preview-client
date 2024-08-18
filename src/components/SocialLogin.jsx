@@ -1,31 +1,41 @@
 import { GoogleAuthProvider } from "firebase/auth";
-import useAuth from "../hooks/useAuth";
 import { useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import PropTypes from "prop-types";
+import useAuth from "../hooks/useAuth";
+import useAxiosPublic from "../hooks/useAxiosPublic";
 
 const SocialLogin = ({ whereFrom }) => {
     const { singUpWithApp } = useAuth();
     const googleProvider = new GoogleAuthProvider();
     const navigate = useNavigate();
     const location = useLocation();
+    const axiosPublic = useAxiosPublic();
 
     const handleSocialLogin = (provider) => {
         singUpWithApp(provider)
-            .then(() => {
-                if (whereFrom === "login") {
-                    toast.success("logged in!");
-                    setTimeout(() => {
-                        navigate(location?.state ? location.state : "/");
-                    }, 500);
-                }
-                else {
-                    toast.success("Account Created Successfully");
-                    setTimeout(() => {
-                        navigate(location?.state ? location.state : "/");
-                    }, 500);
-                }
-                // console.log(res.user);
+            .then((res) => {
+                const userInfo = {
+                    userName: res.user?.displayName,
+                    userEmail: res.user?.email,
+                    userImage: res.user?.photoURL,
+                };
+                axiosPublic.post("/users", userInfo).then((result) => {
+                    //   console.log(result.data);
+                    if (whereFrom === "login") {
+                        toast.success("logged in!");
+                        setTimeout(() => {
+                            navigate(location?.state ? location.state : "/");
+                        }, 500);
+                    }
+                    if (result.data.insertedId) {
+                        toast.success("Account Created Successfully");
+                        setTimeout(() => {
+                            navigate(location?.state ? location.state : "/");
+                        }, 500);
+                    }
+                    // console.log(res.user);
+                });
             })
             .catch((err) => {
                 console.log(err.message);
