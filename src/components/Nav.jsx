@@ -1,4 +1,4 @@
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import siteLogo from "../../public/site logo/logo-color.png";
 import useAuth from "../hooks/useAuth";
 import { useState, useEffect, useRef } from "react";
@@ -47,10 +47,7 @@ const Nav = () => {
                 <NavLink to="/" onClick={closeMobileNav}>Home</NavLink>
             </li>
             <li>
-                <NavLink to="/allPackages" onClick={closeMobileNav}>Packages</NavLink>
-            </li>
-            <li>
-                <NavLink to="/blogs" onClick={closeMobileNav}>Blogs</NavLink>
+                <NavLink to="/allProduct" onClick={closeMobileNav}>All Product</NavLink>
             </li>
             <li>
                 <NavLink to="/aboutUs" onClick={closeMobileNav}>About Us</NavLink>

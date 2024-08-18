@@ -2,10 +2,10 @@ import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { updateProfile } from "firebase/auth";
 import toast from "react-hot-toast";
 import useAuth from "../../hooks/useAuth";
 import useAxiosPublic from "../../hooks/useAxiosPublic";
-import { updateProfile } from "firebase/auth";
 import SocialLogin from "../../components/SocialLogin";
 
 const Register = () => {
@@ -64,10 +64,27 @@ const Register = () => {
                     photoURL: res.data.data.display_url,
                 })
                     .then(() => {
-                        toast.success("Account created successfully")
-                        setTimeout(() => {
-                            navigate('/')
-                        }, 1000);
+                        const userInfo = {
+                            userName: data.name,
+                            userEmail: data.email,
+                            userImage: res.data.data.display_url,
+                        };
+                        axiosPublic
+                            .post("/users", userInfo)
+                            .then((reqRes) => {
+                                if (reqRes.data.insertedId) {
+                                    // console.log("user added to the data base");
+                                    toast.success("Account Created Successfully");
+                                    // navigate after register
+                                    setTimeout(() => {
+                                        navigate(location?.state ? location.state : "/");
+                                    }, 1000);
+                                }
+                            })
+                            .catch((err) => {
+                                console.log(err.message);
+                            });
+                        console.log(userInfo);
                     })
                     .catch((error) => {
                         console.log(error.message);
@@ -91,7 +108,7 @@ const Register = () => {
                     </h2>
                     {/* social login */}
                     <SocialLogin />
-                    {/* menual login */}
+                    {/* email login */}
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <div className="mb-4">
                             <label className="block text-gray-700">Name</label>
@@ -211,7 +228,7 @@ const Register = () => {
                 className="lg:w-1/2 h-full lg:h-screen bg-cover bg-center"
                 style={{ backgroundImage: "url(https://i.ibb.co/Ybx2VfG/Mobile-login.jpg)" }}
             >
-                <div className="h-full bg-black bg-opacity-10"></div>
+                <div className="h-full bg-black bg-opacity-50"></div>
             </div>
         </div>
     );
