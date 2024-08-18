@@ -1,16 +1,16 @@
 import { useForm } from "react-hook-form";
 import SectionTitle from "../../components/SectionTitle";
-import useAxiosPublic from "../../hooks/useAxiosPublic";
-import useAxiosSecure from "../../hooks/useAxiosSecure";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
+import useAxiosPublic from "../../hooks/useAxiosPublic";
+import useAuth from "../../hooks/useAuth";
 
 const image_hosting_key = import.meta.env.VITE_IMAGE_HOSTING_KEY;
 const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_key}`;
 const AddPackage = () => {
+    const { user } = useAuth()
     const axiosPublic = useAxiosPublic();
-    const axiosSecure = useAxiosSecure();
     const navigate = useNavigate();
     const {
         register,
@@ -33,7 +33,7 @@ const AddPackage = () => {
                 "content-type": "multipart/form-data",
             },
         });
-        const packageInfo = {
+        const productInfo = {
             product_name: data.name,
             description: data.description,
             product_type: data.type,
@@ -41,11 +41,12 @@ const AddPackage = () => {
             price: data.price,
             image_1: res1.data.data.display_url,
             image_2: res2.data.data.display_url,
+            adderMail: user.email
         };
-        axiosSecure.post("/packages", packageInfo).then((res) => {
+        axiosPublic.post("/products", productInfo).then((res) => {
             if (res.data.insertedId) {
-                toast.success(`${data.name} is added in package`);
-                navigate("/allPackages");
+                toast.success(`${data.name} is added successfully`);
+                navigate("/allProduct");
                 reset();
             }
         });
