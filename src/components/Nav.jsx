@@ -50,7 +50,7 @@ const Nav = () => {
                 <NavLink to="/allProduct" onClick={closeMobileNav}>All Product</NavLink>
             </li>
             <li>
-                <NavLink to="/aboutUs" onClick={closeMobileNav}>About Us</NavLink>
+                <NavLink to="/addProduct" onClick={closeMobileNav}>Add Product</NavLink>
             </li>
             <li>
                 <NavLink to="/contact" onClick={closeMobileNav}>Contact Us</NavLink>
