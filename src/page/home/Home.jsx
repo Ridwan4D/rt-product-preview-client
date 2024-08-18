@@ -1,8 +1,14 @@
+import { Helmet } from "react-helmet";
+import Slider from "./Shared/Slider";
 
 const Home = () => {
     return (
-        <div>
-            <h2 className="text-3xl font-bold">This is home</h2>
+        <div className="space-y-10">
+            <Helmet>
+                <title>Home | RT Products</title>
+            </Helmet>
+            {/* Slider */}
+            <Slider />
         </div>
     );
 };
